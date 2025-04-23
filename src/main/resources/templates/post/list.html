@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/style.css">
+	<title>List</title>
+</head>
+<body>
+	<h1>게시글 목록</h1>
+	<section class="search_section">
+		<!--	검색창	-->
+		<form method="get" th:action="@{/posts}">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="검색어 입력"/>
+			<button type="submit">검색</button>
+		</form>
+		<!-- 검색 중이면 전체 목록 버튼 보여주기 -->
+		<div th:if="${isSearching}">
+			<a th:href="@{/posts}">전체 목록으로</a>
+		</div>
+	</section>
+	<section class="list_section">
+		<!--  검색 결과가 없을 때 -->
+		<div th:if="${postPage.content.isEmpty()}" class="list_div">
+			<p class="empty_text">검색된 게시 글이 없습니다.</p>
+		</div>
+		<!--  검색 결과가 있을 때만 목록 + 페이징 노출 -->
+		<div th:unless="${postPage.content.isEmpty()}" class="list_div">
+			<ul class="list_ul">
+				<li th:each="post : ${postPage.content}">
+					<a th:href="@{/posts/{id}(id=${post.id}, page=${postPage.number}, keyword=${keyword})}">
+						<span th:text="${post.title}">제목</span>
+						<span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2025.04.23</span>
+					</a>
+				</li>
+			</ul>
+			<!-- 페이징 -->
+			<div class="pagination_box">
+					<span th:if="${postPage.hasPrevious()}">
+						<a th:href="@{/posts(page=${postPage.number - 1}, keyword=${keyword})}">이전</a>
+					</span>
+				<span th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}">
+						<a th:href="@{/posts(page=${i}, keyword=${keyword})}" th:text="${i + 1}" th:classappend="${i == postPage.number} ? ' current' : ''"></a>
+					</span>
+				<span th:if="${postPage.hasNext()}">
+						<a th:href="@{/posts(page=${postPage.number + 1}, keyword=${keyword})}">다음</a>
+					</span>
+			</div>
+		</div>
+		<a href="/posts/new" class="edit_box">글 작성하기</a>
+	</section>
+</body>
+</html>

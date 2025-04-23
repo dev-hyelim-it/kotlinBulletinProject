@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<script type="module" src="/js/comment.js"></script>
+	<link rel="stylesheet" href="/css/style.css">
+	<title th:text="${post.title}">Detail</title>
+</head>
+<body>
+	<h1 th:text="${post.title}">제목</h1>
+	<section class="content_section">
+		<div class="author_box">
+			<p><strong>작성자:</strong><span th:text="${post.author}">홍길동</span></p>
+			<p><strong>작성일:</strong><span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2025년 1월 1일</span></p>
+		</div>
+		<p th:utext="${#strings.replace(post.content, '\n', '<br/>')}" class="content_box">내용</p>
+		<div class="post_btn">
+				<span th:if="${prevPost != null}">
+					<a th:href="@{/posts/{id}(id=${prevPost.id}, page=${prevPage}, keyword=${keyword})}">← 이전 글: <span th:text="${prevPost.title}" class="underline">이전 글 입니다.</span>
+					</a>
+				</span>
+			<span th:if="${nextPost != null}">
+					<a th:href="@{/posts/{id}(id=${nextPost.id}, page=${nextPage}, keyword=${keyword})}">다음 글: <span th:text="${nextPost.title}" class="underline">다음 글 입니다.</span> →
+					</a>
+				</span>
+		</div>
+		<div class="content_bottom_box">
+			<a th:href="@{/posts/{id}/edit(id=${post.id}, page=${page}, keyword=${keyword})}">수정</a>
+			<form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">
+				<button type="submit">삭제</button>
+			</form>
+			<a th:href="@{/posts(page=${page}, keyword=${keyword})}">목록으로</a>
+		</div>
+	</section>
+
+	<section class="comment_section">
+		<h3>댓글</h3>
+		<div th:if="${post.comments.empty}" class="comment_list">
+			<p class="empty_text">등록된 댓글이 없습니다.</p>
+		</div>
+		<ul class="comment_list" th:unless="${post.comments.empty}">
+			<li th:each="comment : ${post.comments}">
+				<div th:id="'comment-text-' + ${comment.id}" class="comment_content">
+					<p th:utext="${#strings.replace(comment.content, '\n', '<br/>')}">내용</p>
+					<p th:text="${comment.author}">작성자</p>
+				</div>
+
+				<form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post" th:id="'comment-form-' + ${comment.id}" style="display:none;" onsubmit="return validateComment(this)">
+					<div class="comment_text_box">
+						<input type="hidden" name="postId" th:value="${post.id}" />
+						<textarea name="content" th:text="${comment.content}"></textarea>
+						<input type="text" name="author" th:value="${comment.author}" />
+					</div>
+					<div class="comment_btn_box">
+						<button type="submit">완료</button>
+						<button type="button" th:onclick="'cancelEdit(' + ${comment.id} + ')'">취소</button>
+					</div>
+				</form>
+
+				<div th:id="'comment-controls-' + ${comment.id}" class="comment_btn_box">
+					<button type="button" th:onclick="'toggleEdit(' + ${comment.id} + ')'">수정</button>
+
+					<form th:action="@{/comments/{id}/delete(id=${comment.id})}" method="post">
+						<input type="hidden" name="postId" th:value="${post.id}" />
+						<button type="submit">삭제</button>
+					</form>
+				</div>
+			</li>
+		</ul>
+		<div class="comment_form">
+			<form th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post" onsubmit="return validateComment(this)">
+				<div>
+					<textarea name="content" placeholder="댓글 내용" id="commentTextarea"></textarea>
+					<input type="text" name="author" placeholder="작성자" />
+				</div>
+				<button type="submit">댓글 등록</button>
+			</form>
+		</div>
+	</section>
+</body>
+</html>
