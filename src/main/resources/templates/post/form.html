@@ -11,6 +11,8 @@
 		<input type="text" th:field="*{title}" placeholder="제목"/><br>
 		<textarea th:field="*{content}" id="formTextarea" placeholder="내용"></textarea><br>
 		<input type="text" th:field="*{author}" placeholder="작성자"/><br>
+		<input type="password" name="password" placeholder="비밀번호 (4자리)" maxlength="4" required />
+
 		<div>
 			<button type="submit">등록</button>
 			<a th:href="@{/posts}">취소</a>

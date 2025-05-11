@@ -1,4 +1,4 @@
-package com.kotlinproject.PostService
+package com.kotlinproject.Service
 
 import com.kotlinproject.dto.PostDto
 import com.kotlinproject.entity.Post
@@ -6,6 +6,7 @@ import com.kotlinproject.repository.PostRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -18,13 +19,14 @@ class PostService (
         val post = Post(
             title = dto.title,
             content = dto.content,
-            author = dto.author
+            author = dto.author,
+            password = dto.password
         )
         return postRepository.save(post)
     }
 
     fun getAllPosts(): List<Post> {
-        return postRepository.findAll()
+        return postRepository.findAllByOrderByIdDesc()
     }
 
     fun getPostById(id: Long): Post {
@@ -47,7 +49,7 @@ class PostService (
     }
 
     fun searchPosts(keyword: String?, page: Int, size: Int): Page<Post> {
-        val pageable: Pageable = PageRequest.of(page, size)
+        val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"))
         return if (!keyword.isNullOrBlank()) {
             postRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable)
         } else {
@@ -56,7 +58,7 @@ class PostService (
     }
 
     fun getPageNumberForPost(postId: Long, pageSize: Int): Int {
-        val allPosts = postRepository.findAllByOrderByIdAsc() // ID 기준 전체 정렬
+        val allPosts = postRepository.findAllByOrderByIdDesc() // ID 기준 전체 정렬
         val index = allPosts.indexOfFirst { it.id == postId }
         println("전체 글 개수: ${allPosts.size}, 현재 글 index: $index, 계산된 페이지: ${index / pageSize}")
         return if (index >= 0) index / pageSize else 0

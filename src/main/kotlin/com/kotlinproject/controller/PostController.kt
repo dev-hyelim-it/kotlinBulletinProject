@@ -1,6 +1,6 @@
 package com.kotlinproject.controller
 
-import com.kotlinproject.PostService.PostService
+import com.kotlinproject.Service.PostService
 import com.kotlinproject.dto.CommentDto
 import com.kotlinproject.dto.PostDto
 import org.springframework.stereotype.Controller
@@ -47,6 +47,7 @@ class PostController (
     fun showPostDetail(@PathVariable id: Long,
                        @RequestParam(required = false) page: Int?,
                        @RequestParam(required = false) keyword: String?,
+                       @RequestParam(required = false) editCommentId: Long?,
                        model: Model
     ): String {
         val post = postService.getPostById(id)
@@ -63,6 +64,7 @@ class PostController (
         model.addAttribute("nextPage", nextPage)
         model.addAttribute("prevPage", prevPage)
         model.addAttribute("keyword", keyword ?: "")
+        model.addAttribute("editCommentId", editCommentId)
         model.addAttribute("commentDto", CommentDto())
         return "post/detail"
     }
@@ -97,4 +99,30 @@ class PostController (
         postService.deletePost(id)
         return "redirect:/posts"
     }
+
+    // 본인 확인 용 비밀번호 입력
+    @PostMapping("/{id}/verify-password")
+    fun verifyPassword(
+        @PathVariable id: Long,
+        @RequestParam password: String,
+        @RequestParam action: String,
+        model: Model
+    ): String {
+        val post = postService.getPostById(id)
+        return if (post.password == password) {
+            when (action) {
+                "edit" -> "redirect:/posts/$id/edit"
+                "delete" -> {
+                    postService.deletePost(id)
+                    "redirect:/posts"
+                }
+                else -> "redirect:/posts/$id"
+            }
+        } else {
+            model.addAttribute("post", post)
+            model.addAttribute("error", "비밀번호가 일치하지 않습니다.")
+            return "post/detail"
+        }
+    }
+
 }

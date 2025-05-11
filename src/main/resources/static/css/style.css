@@ -166,10 +166,11 @@ textarea {
 
 .content_bottom_box {
     display: flex;
+    justify-content: space-between;
     margin: 10px 0;
 }
 
-.content_bottom_box a, .content_bottom_box button{
+.content_bottom_box a, .content_bottom_box button {
     display: flex;
     align-items: center;
     padding: 0 10px;
@@ -182,20 +183,31 @@ textarea {
     border-radius: 3px;
 }
 
-.content_bottom_box a:first-child {
+#postButtons {
+    display: flex;
+}
+
+.content_bottom_box button {
+    background: #ffa4a4;
+}
+
+section button.modify_btn {
+    margin-right: 5px;
     background-color: rgb(159, 212, 255);
 }
 
+.content_bottom_box a {
+    background-color: #ccc;
+}
+
 .content_bottom_box form {
+    align-items: center;
     margin: 0 20px;
 }
 
-.content_bottom_box form button {
-    background-color: #ffa4a4;
-}
-
-.content_bottom_box a:last-child {
-    background-color: #ccc;
+.complete {
+    margin: 0 5px;
+    background-color: rgb(159, 212, 255) !important;
 }
 
 .comment_section {
@@ -252,19 +264,19 @@ textarea {
     width: 97px;
 }
 
-.comment_btn_box > button {
-    margin-right: 5px;
-    background-color: #ffa4a4;
-}
-
 .comment_btn_box button {
     padding: 0 10px;
     height: 35px;
     line-height: 35px;
     font-size: 14px;
     color: white;
+    background-color: #ffa4a4;
     border: none;
     border-radius: 3px;
+}
+
+.comment_btn_box .complete {
+    margin-left: 0;
 }
 
 .comment_btn_box form {
@@ -275,13 +287,24 @@ textarea {
     background-color: rgb(159, 212, 255);
 }
 
-.comment_list li > form .comment_btn_box button:last-child {
-    margin-right: 0;
-    background-color: rgb(159, 212, 255);
+.comment_list li > form {
+    display: flex;
+    width: 100%;
 }
 
-.comment_list li > form {
-    width: 100%;
+.comment_pw_form {
+    justify-content: end;
+    padding-top: 5px;
+}
+
+.comment_pw_form  button {
+    padding: 0 10px;
+    line-height: 35px;
+    font-size: 14px;
+    color: white;
+    background: #ffa4a4;
+    border: none;
+    border-radius: 3px;
 }
 
 .comment_text_box {
@@ -296,7 +319,7 @@ textarea {
 }
 
 .comment_list li > form input {
-    padding: 0;
+    padding: 0 5px;
     height: 35px;
 }
 

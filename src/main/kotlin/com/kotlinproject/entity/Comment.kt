@@ -12,6 +12,9 @@ data class Comment (
     var author: String,
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
+    @Column(nullable = false)
+    var password: String = "",
+
     @ManyToOne
     @JoinColumn(name = "post_id")
     var post: Post

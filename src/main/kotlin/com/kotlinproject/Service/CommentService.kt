@@ -1,4 +1,4 @@
-package com.kotlinproject.PostService
+package com.kotlinproject.Service
 
 import com.kotlinproject.dto.CommentDto
 import com.kotlinproject.entity.Comment
@@ -18,6 +18,7 @@ class CommentService (
             content = dto.content,
             author = dto.author,
             createdAt = LocalDateTime.now(),
+            password = dto.password,
             post = post
         )
         return commentRepository.save(comment)

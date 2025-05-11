@@ -13,5 +13,5 @@ interface PostRepository : JpaRepository<Post, Long> {
     ): Page<Post>
     fun findFirstByIdLessThanOrderByIdDesc(id: Long): Post?
     fun findFirstByIdGreaterThanOrderByIdAsc(id: Long): Post?
-    fun findAllByOrderByIdAsc(): List<Post>
+    fun findAllByOrderByIdDesc(): List<Post>
 }

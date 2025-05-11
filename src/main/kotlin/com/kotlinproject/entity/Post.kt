@@ -14,6 +14,9 @@ data class Post (
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updateAt: LocalDateTime = LocalDateTime.now(),
 
+    @Column(nullable = false)
+    var password: String = "",
+
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
     val comments: MutableList<Comment> = mutableListOf()
 )
